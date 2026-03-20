@@ -33,7 +33,7 @@ texUtil <command> [flags]
 Convert texture files matching a glob pattern to a different image format.
 
 ```
-texUtil convert <pattern...> --to <format> [--dir <directory>]
+texUtil convert <pattern...> --to <format> [--dir <directory>] [--remove]
 ```
 
 **Flags**
@@ -42,6 +42,7 @@ texUtil convert <pattern...> --to <format> [--dir <directory>]
 |------|-------------|---------|
 | `--to` | Target format: `png`, `jpg`/`jpeg`, `tif`/`tiff`, `bmp` | *(required)* |
 | `--dir` | Directory to search in | `.` (current directory) |
+| `--remove` | Remove source files after successful conversion | `false` |
 
 **Examples**
 
@@ -51,6 +52,9 @@ texUtil convert '*.tif' --to png
 
 # Convert all PNGs in a specific directory to JPEG
 texUtil convert '*.png' --to jpg --dir /path/to/textures
+
+# Convert and delete the originals
+texUtil convert '*.tif' --to png --remove
 
 # Shell glob expansion also works
 texUtil convert --to png -- textures/*.tif
