@@ -16,6 +16,7 @@ import (
 
 var convertTo string
 var convertDir string
+var convertRemove bool
 
 var convertCmd = &cobra.Command{
 	Use:   "convert <pattern...>",
@@ -27,6 +28,7 @@ var convertCmd = &cobra.Command{
 func init() {
 	convertCmd.Flags().StringVar(&convertTo, "to", "", "Target format: png, jpg, tiff, bmp (required)")
 	convertCmd.Flags().StringVar(&convertDir, "dir", ".", "Directory to search in (default: current directory)")
+	convertCmd.Flags().BoolVar(&convertRemove, "remove", false, "Remove source files after successful conversion")
 	if err := convertCmd.MarkFlagRequired("to"); err != nil {
 		panic(err)
 	}
@@ -62,6 +64,12 @@ func runConvert(_ *cobra.Command, args []string) error {
 	for _, src := range matches {
 		if err := convertFile(src, ext); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "skipping %s: %v\n", src, err)
+			continue
+		}
+		if convertRemove {
+			if err := os.Remove(src); err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "warning: failed to remove %s: %v\n", src, err)
+			}
 		}
 	}
 	return nil
