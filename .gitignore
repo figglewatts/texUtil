@@ -1,0 +1,19 @@
+# Binaries
+texutil
+dist/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Test assets
+test/
+
+# GoLand
+.idea/
+*.iml
