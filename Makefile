@@ -2,7 +2,8 @@ BINARY  := texutil
 GO      ?= go
 DIST    := dist
 
-LDFLAGS := -s -w
+VERSION ?= dev
+LDFLAGS := -s -w -X texUtil/cmd.version=$(VERSION)
 
 PLATFORMS := \
 	linux/amd64 \

@@ -35,7 +35,7 @@ jobs:
           EXT=""
           [ "$GOOS" = "windows" ] && EXT=".exe"
           OUT="texutil-${GOOS}-${GOARCH}${EXT}"
-          go build -ldflags "-s -w" -o "$OUT" .
+          go build -ldflags "-s -w -X texUtil/cmd.version=${{ github.event.release.tag_name }}" -o "$OUT" .
           echo "ASSET=$OUT" >> "$GITHUB_ENV"
 
       - name: Upload asset
