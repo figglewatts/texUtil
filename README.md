@@ -124,6 +124,62 @@ texutil applyao '*.png' --aosuffix _AmbientOcclusion
 
 The tool will automatically attempt to match AO files by replacing common texture suffixes (like `_albedo`, `_diffuse`, etc.) with the AO suffix.
 
+#### `applyalpha`
+
+Bake an alpha/opacity map into a diffuse texture. The alpha map is expected to be grayscale.
+
+```sh
+texutil applyalpha <pattern...> [--alphasuffix <suffix>] [--suffix <suffix>] [--dir <directory>]
+```
+
+**Flags**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--alphasuffix` | Suffix to find the alpha/opacity file (e.g. `_alpha` for `base.png` -> `base_alpha.png`) | `_alpha` |
+| `--suffix` | Suffix to append to output filenames; if omitted, files are modified in place | `""` |
+| `--dir` | Directory to search in | `.` (current directory) |
+
+**Examples**
+
+```sh
+# Apply alpha to all albedo maps
+texutil applyalpha '*_albedo.png'
+
+# Apply alpha with a specific suffix
+texutil applyalpha '*_diffuse.jpg' --suffix _alpha_applied
+
+# Custom alpha suffix
+texutil applyalpha '*.png' --alphasuffix _opacity
+```
+
+The tool will automatically attempt to match alpha files by replacing common texture suffixes (like `_albedo`, `_diffuse`, etc.) with the alpha suffix.
+
+#### `invert`
+
+Invert the RGB channels of images matching a glob pattern. The alpha channel is preserved.
+
+```sh
+texutil invert <pattern...> [--suffix <suffix>] [--dir <directory>]
+```
+
+**Flags**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--suffix` | Suffix to append to output filenames; if omitted, files are modified in place | `""` |
+| `--dir` | Directory to search in | `.` (current directory) |
+
+**Examples**
+
+```sh
+# Invert all masks in the current directory
+texutil invert '*_mask.png'
+
+# Invert images and save with a suffix
+texutil invert '*.jpg' --suffix _inverted
+```
+
 ## Supported Formats
 
 | Format | Extensions |
