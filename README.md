@@ -1,4 +1,4 @@
-# texUtil
+# texutil
 
 A CLI utility for working with texture files.
 
@@ -23,7 +23,7 @@ The `texutil` binary will be built in the current directory.
 ## Usage
 
 ```
-texUtil <command> [flags]
+texutil <command> [flags]
 ```
 
 ### Commands
@@ -32,8 +32,8 @@ texUtil <command> [flags]
 
 Convert texture files matching a glob pattern to a different image format.
 
-```
-texUtil convert <pattern...> --to <format> [--dir <directory>] [--remove]
+```sh
+texutil convert <pattern...> --to <format> [--dir <directory>] [--remove]
 ```
 
 **Flags**
@@ -47,20 +47,82 @@ texUtil convert <pattern...> --to <format> [--dir <directory>] [--remove]
 **Examples**
 
 ```sh
-# Convert all TIFFs in the current directory to PNG
-texUtil convert '*.tif' --to png
+# Convert all TIFFs in current directory to PNG
+texutil convert '*.tif' --to png
 
 # Convert all PNGs in a specific directory to JPEG
-texUtil convert '*.png' --to jpg --dir /path/to/textures
+texutil convert '*.png' --to jpg --dir /path/to/textures
 
 # Convert and delete the originals
-texUtil convert '*.tif' --to png --remove
+texutil convert '*.tif' --to png --remove
 
 # Shell glob expansion also works
-texUtil convert --to png -- textures/*.tif
+texutil convert --to png -- textures/*.tif
 ```
 
 Output files are written alongside the source files with the new extension. Files that cannot be decoded are skipped with an error printed to stderr.
+
+#### `resize`
+
+Resize texture files matching a glob pattern to a specific size.
+
+```sh
+texutil resize <pattern...> --size <width>x<height> [--dir <directory>] [--suffix <suffix>] [--filter <filter>]
+```
+
+**Flags**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--size` | Target size in `WxH` format (e.g. `1024x1024`) | *(required)* |
+| `--dir` | Directory to search in | `.` (current directory) |
+| `--suffix` | Suffix to append to output filenames; if omitted, files are modified in place | `""` |
+| `--filter` | Resampling filter: `nearest`, `bilinear`, `catmull-rom` | `bilinear` |
+
+**Examples**
+
+```sh
+# Resize all PNGs to 1024x1024 in place
+texutil resize '*.png' --size 1024x1024
+
+# Resize and save with a suffix
+texutil resize '*.png' --size 512x512 --suffix _512
+
+# Resize using a specific filter
+texutil resize '*.jpg' --size 2048x2048 --filter catmull-rom
+```
+
+#### `applyao`
+
+Multiply colors from an Ambient Occlusion (AO) texture into textures matching a glob pattern.
+
+```sh
+texutil applyao <pattern...> [--intensity <0.0-1.0>] [--aosuffix <suffix>] [--suffix <suffix>] [--dir <directory>]
+```
+
+**Flags**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--intensity` | Intensity of the AO effect (0.0 to 1.0, 0 is invalid) | `0.75` |
+| `--aosuffix` | Suffix to find the AO file (e.g. `_ao` for `base.png` -> `base_ao.png`) | `_ao` |
+| `--suffix` | Suffix to append to output filenames; if omitted, files are modified in place | `""` |
+| `--dir` | Directory to search in | `.` (current directory) |
+
+**Examples**
+
+```sh
+# Apply AO to all albedo maps with default intensity
+texutil applyao '*_albedo.png'
+
+# Apply AO with a specific intensity and suffix
+texutil applyao '*_diffuse.jpg' --intensity 0.5 --suffix _ao_applied
+
+# Custom AO suffix
+texutil applyao '*.png' --aosuffix _AmbientOcclusion
+```
+
+The tool will automatically attempt to match AO files by replacing common texture suffixes (like `_albedo`, `_diffuse`, etc.) with the AO suffix.
 
 ## Supported Formats
 
