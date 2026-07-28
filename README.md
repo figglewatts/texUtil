@@ -180,6 +180,42 @@ texutil invert '*_mask.png'
 texutil invert '*.jpg' --suffix _inverted
 ```
 
+#### `orm`
+
+Pack Occlusion (R), Roughness (G), and Metallic (B) maps into a single texture.
+
+```sh
+texutil orm <pattern...> [--osuffix <suffix>] [--rsuffix <suffix>] [--msuffix <suffix>] [--suffix <suffix>] [--dir <directory>] [--default-o <value>] [--default-r <value>] [--default-m <value>]
+```
+
+**Flags**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--osuffix` | Suffix for the occlusion map | `_ao` |
+| `--rsuffix` | Suffix for the roughness map | `_roughness` |
+| `--msuffix` | Suffix for the metallic map | `_metallic` |
+| `--suffix` | Suffix for the output ORM map | `_orm` |
+| `--dir` | Directory to search in | `.` (current directory) |
+| `--default-o` | Default value for occlusion if map is missing (0.0 to 1.0) | `1.0` |
+| `--default-r` | Default value for roughness if map is missing (0.0 to 1.0) | `1.0` |
+| `--default-m` | Default value for metallic if map is missing (0.0 to 1.0) | `0.0` |
+
+**Examples**
+
+```sh
+# Create ORM maps for all textures (looks for _ao, _roughness, _metallic)
+texutil orm '*_albedo.png'
+
+# Custom suffixes and output suffix
+texutil orm '*' --osuffix _occ --rsuffix _rough --msuffix _met --suffix _ORM
+
+# Specify default values for missing maps
+texutil orm '*_albedo.png' --default-m 0.0 --default-o 1.0
+```
+
+The tool will automatically attempt to match map files by replacing common texture suffixes (like `_albedo`, `_diffuse`, etc.) with the O, R, and M suffixes. If a map is missing, it will use the specified default value.
+
 ## Supported Formats
 
 | Format | Extensions |
